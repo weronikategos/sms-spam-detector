@@ -4,26 +4,54 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SMS Spam Detector</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
-    textarea { width: 100%; height: 120px; font: inherit; }
-    button { margin-top: 8px; padding: 8px 16px; font: inherit; }
-    .result { margin-top: 20px; padding: 12px; border-radius: 6px; }
-    .spam { background: #fde2e2; } .ham { background: #e2f5e5; }
-    small { color: #666; }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>Is this SMS spam?</h1>
-  <form method="post">
-    <textarea name="message" placeholder="Paste the message text (in English)">{{ result.text if result else "" }}</textarea>
-    <button type="submit">Check</button>
-  </form>
-  {% if result %}
-    <div class="result {{ result.label }}">
-      {% if result.is_spam %}This looks like <strong>spam</strong>.{% else %}This looks like a <strong>normal message</strong>.{% endif %}
+  <main class="card">
+    <header>
+      <h1>SMS Spam Detector</h1>
+      <p class="subtitle">
+        A machine learning model (TF-IDF + {{ model_name }}) trained on 5,572 real SMS messages.
+        Paste a message in English to check whether it looks like spam.
+      </p>
+    </header>
+
+    <!-- Works without JavaScript as a normal POST form; app.js upgrades it to live checking -->
+    <form id="check-form" method="post">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" maxlength="1000" required
+                placeholder="e.g. Congratulations! You've won a free trip...">{{ result.text if result else "" }}</textarea>
+
+      <div class="row">
+        <div class="examples">
+          <button type="button" class="chip" data-text="WINNER!! You have been selected to receive a £900 prize reward. Call 09061701461 to claim now!">Prize spam</button>
+          <button type="button" class="chip" data-text="FREE entry into our weekly competition, just text WIN to 80086 now. T&amp;C apply">Contest spam</button>
+          <button type="button" class="chip" data-text="Hey, are we still meeting for lunch tomorrow? Let me know when you leave work">Normal message</button>
+        </div>
+        <span class="counter"><span id="count">0</span> / 1000</span>
+      </div>
+
+      <button id="submit" class="submit" type="submit">Check</button>
+    </form>
+
+    <div id="result" aria-live="polite">
+      {% if result %}
+        <div class="result {{ result.label }}">
+          {% if result.is_spam %}
+            <span class="icon">🚫</span><p>This looks like <strong>spam</strong>.</p>
+          {% else %}
+            <span class="icon">✅</span><p>This looks like a <strong>normal message</strong>.</p>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-  <p><small>Model: {{ model_name }}, trained on the SMS Spam Collection dataset.</small></p>
+
+    <footer>
+      <span>Model: {{ model_name }} · API: <code>POST /api/predict</code></span>
+      <a href="https://github.com/weronikategos/sms-spam-detector" target="_blank" rel="noopener">Source on GitHub</a>
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
