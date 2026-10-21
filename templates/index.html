@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMS Spam Detector</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+    textarea { width: 100%; height: 120px; font: inherit; }
+    button { margin-top: 8px; padding: 8px 16px; font: inherit; }
+    .result { margin-top: 20px; padding: 12px; border-radius: 6px; }
+    .spam { background: #fde2e2; } .ham { background: #e2f5e5; }
+    small { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Is this SMS spam?</h1>
+  <form method="post">
+    <textarea name="message" placeholder="Paste the message text (in English)">{{ result.text if result else "" }}</textarea>
+    <button type="submit">Check</button>
+  </form>
+  {% if result %}
+    <div class="result {{ result.label }}">
+      {% if result.is_spam %}This looks like <strong>spam</strong>.{% else %}This looks like a <strong>normal message</strong>.{% endif %}
+    </div>
+  {% endif %}
+  <p><small>Model: {{ model_name }}, trained on the SMS Spam Collection dataset.</small></p>
+</body>
+</html>
