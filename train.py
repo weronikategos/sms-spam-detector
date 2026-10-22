@@ -7,6 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report, f1_score
@@ -38,6 +39,9 @@ def build_models():
         "Logistic Regression": Pipeline([("tfidf", vectorizer()),
                                          ("clf", LogisticRegression(max_iter=1000, class_weight="balanced"))]),
         "Linear SVM": Pipeline([("tfidf", vectorizer()), ("clf", LinearSVC(class_weight="balanced"))]),
+        "Random Forest": Pipeline([("tfidf", vectorizer()),
+                                   ("clf", RandomForestClassifier(n_estimators=200, class_weight="balanced",
+                                                                  random_state=42, n_jobs=-1))]),
     }
 
 
