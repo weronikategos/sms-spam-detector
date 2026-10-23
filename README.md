@@ -4,7 +4,8 @@
 
 A machine learning model that detects spam in SMS messages, served as a **Flask web app and REST API**.
 
-**Live demo:** coming soon
+**Live demo:** https://sms-spam-detector-btny.onrender.com  
+_Hosted on Render's free plan: the app sleeps after about 15 minutes without traffic, so the first load can take up to a minute._
 
 ## Problem
 A mobile operator wants to automatically flag scam and advertising messages before they reach customers.
