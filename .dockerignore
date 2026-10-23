@@ -1,0 +1,8 @@
+.venv
+venv
+__pycache__
+data
+model.joblib
+.pytest_cache
+.git
+tests

@@ -1,6 +1,10 @@
 # SMS Spam Detector
 
+![tests](https://github.com/weronikategos/sms-spam-detector/actions/workflows/tests.yml/badge.svg)
+
 A machine learning model that detects spam in SMS messages, served as a **Flask web app and REST API**.
+
+**Live demo:** coming soon
 
 ## Problem
 A mobile operator wants to automatically flag scam and advertising messages before they reach customers.
@@ -27,7 +31,7 @@ Linear SVM on the test set: F1 = 0.955, precision = 0.98, recall = 0.93, accurac
 ![Confusion matrix](confusion_matrix.png)
 
 ## Tech stack
-Python, pandas, scikit-learn, Flask, pytest, HTML, CSS, JavaScript
+Python, pandas, scikit-learn, Flask, pytest, HTML, CSS, JavaScript, Docker, GitHub Actions
 
 ## How to run
 ```bash
@@ -45,7 +49,17 @@ curl -X POST http://127.0.0.1:5000/api/predict -H "Content-Type: application/jso
 ```
 Response: `{"is_spam": true, "label": "spam", "text": "..."}`
 
+## Docker
+```bash
+docker build -t sms-spam-detector .                 # also trains the model inside the image
+docker run --rm -p 8000:8000 sms-spam-detector      # open http://localhost:8000
+```
+The container serves the app with `gunicorn` on the port from `$PORT` (default 8000), so the same image runs locally and on hosting platforms such as Render.
+
+## CI
+On every push GitHub Actions ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) runs the tests, then builds the Docker image and checks that the API flags a sample spam message.
+
 ## What I would add next
 - a model for Polish messages
 - a comparison with a BERT-style model
-- cloud deployment (e.g. Render, Azure) and Docker
+- collecting user feedback to retrain the model
